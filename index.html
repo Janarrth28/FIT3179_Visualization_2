@@ -1,27 +1,71 @@
-<script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
-<script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
-<script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Australian Climate Change and Its Effects</title>
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background-color: #f9f9f9;
+    }
+    h1 {
+      color: #2b4d7a;
+    }
+    .container {
+      display: flex;
+      gap: 40px;
+    }
+    .text-section {
+      flex: 1;
+      max-width: 350px;
+      line-height: 1.6;
+      font-size: 15px;
+      color: #333;
+    }
+    .viz-section {
+      flex: 3;
+    }
+  </style>
+</head>
+<body>
+  <h1>Australian Climate Change and Its Effects</h1>
 
-<div id="map-rte"></div>
+  <div class="container">
+    <div class="text-section">
+      <p>
+        This visualisation explores how Australia’s changing climate relates to increasing bushfire activity.
+        The map displays <strong>average rainfall and temperature patterns</strong> across Australian states,
+        while accompanying charts show <strong>bushfire trends</strong>, <strong>forest burn ratios</strong>,
+        and the <strong>link between temperature and total area burnt</strong>.
+      </p>
+      <p>
+        The data reveal a clear pattern — as <strong>temperatures rise and rainfall declines</strong>, states such
+        as <strong>New South Wales</strong> and <strong>Victoria</strong> experience significantly higher burn areas,
+        highlighting the compounding effects of <strong>climate change on forest ecosystems</strong>.
+      </p>
+      <p>
+        Together, these visualisations emphasise the urgent need for climate resilience strategies to manage
+        <strong>heat, drought, and fire</strong> risks in Australia’s future.
+      </p>
+    </div>
 
-<script>
-  vegaEmbed("#map-rte", "map.json", {actions:false});
-</script>
+    <div class="viz-section">
+      <div id="map-rte"></div>
+      <div id="fire-trend"></div>
+      <div id="burnRatioScatter"></div>
+      <div id="scatter-temp-burn"></div>
+    </div>
+  </div>
 
-<div id="fire-trend"></div>
-<script>
-  vegaEmbed("#fire-trend", "bushfire_trend_area.json", { actions: false });
-</script>
-
-
-
-<div id="burnRatioScatter"></div>
-
-<script>
-  vegaEmbed("#burnRatioScatter", "burn_ratio_scatter.json").catch(console.error);
-</script>
-
-<div id="scatter-temp-burn"></div>
-<script type="text/javascript">
-  vegaEmbed('#scatter-temp-burn', 'scatter_temp_vs_burn.json', {actions:false});
-</script>
+  <script>
+    vegaEmbed("#map-rte", "map.json", { actions: false });
+    vegaEmbed("#fire-trend", "bushfire_trend_area.json", { actions: false });
+    vegaEmbed("#burnRatioScatter", "burn_ratio_scatter.json", { actions: false });
+    vegaEmbed("#scatter-temp-burn", "scatter_temp_vs_burn.json", { actions: false });
+  </script>
+</body>
+</html>
