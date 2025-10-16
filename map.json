@@ -1,0 +1,108 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "title": {"text": "AU: Rainfall / Max Temp / Evaporation by State", "anchor": "start"},
+    "width": 760,
+    "height": 560,
+  
+    "params": [
+      {
+        "name": "yearSel",
+        "value": 2010,
+        "bind": { "input": "range", "min": 2008, "max": 2017, "step": 1, "name": "Year " }
+      },
+      {
+        "name": "metricSel",
+        "value": "Rainfall",
+        "bind": { "input": "select", "options": ["Rainfall", "Temperature", "Evaporation"], "name": "Metric " }
+      }
+    ],
+  
+    "data": { "url": "state_year_climate_avgs.csv" },
+  
+    "transform": [
+      { "calculate": "toNumber(datum.Year)", "as": "YearNum" },
+      { "filter": "datum.YearNum == yearSel" },
+      {
+        "lookup": "StateName",
+        "from": {
+          "data": {
+            "url": "australia_states.topojson",
+            "format": { "type": "topojson", "feature": "ne_10m_admin_1_states_provinces" }
+          },
+          "key": "properties.state",
+          "fields": ["geometry", "properties"]
+        }
+      },
+      { "calculate": "yearSel", "as": "SelectedYear" }
+    ],
+  
+    "projection": { "type": "mercator", "center": [133, -27], "scale": 800 },
+    "config": { "view": { "stroke": null } },
+  
+
+    "resolve": { "scale": { "color": "independent" } },
+  
+    "layer": [
+      {
+        "transform": [ { "filter": "metricSel == 'Rainfall'" } ],
+        "mark": { "type": "geoshape", "stroke": "white", "strokeWidth": 0.8 },
+        "encoding": {
+          "shape": { "field": "geometry", "type": "geojson" },
+          "color": {
+            "field": "avg_Rainfall",
+            "type": "quantitative",
+            "scale": { "scheme": "blues" },
+            "title": "Avg rainfall (mm)"
+          },
+          "tooltip": [
+            { "field": "properties.state", "title": "State" },
+            { "field": "SelectedYear", "title": "Year" },
+            { "field": "avg_Rainfall", "title": "Rainfall (mm)", "format": ".2f" },
+            { "field": "avg_MaxTemp", "title": "Max temp (°C)", "format": ".2f" },
+            { "field": "avg_Evaporation", "title": "Evaporation (mm)", "format": ".2f" }
+          ]
+        }
+      },
+      {
+        "transform": [ { "filter": "metricSel == 'Temperature'" } ],
+        "mark": { "type": "geoshape", "stroke": "white", "strokeWidth": 0.8 },
+        "encoding": {
+          "shape": { "field": "geometry", "type": "geojson" },
+          "color": {
+            "field": "avg_MaxTemp",
+            "type": "quantitative",
+            "scale": { "scheme": "reds" },
+            "title": "Max temp (°C)"
+          },
+          "tooltip": [
+            { "field": "properties.state", "title": "State" },
+            { "field": "SelectedYear", "title": "Year" },
+            { "field": "avg_MaxTemp", "title": "Max temp (°C)", "format": ".2f" },
+            { "field": "avg_Rainfall", "title": "Rainfall (mm)", "format": ".2f" },
+            { "field": "avg_Evaporation", "title": "Evaporation (mm)", "format": ".2f" }
+          ]
+        }
+      },
+      {
+        "transform": [ { "filter": "metricSel == 'Evaporation'" } ],
+        "mark": { "type": "geoshape", "stroke": "white", "strokeWidth": 0.8 },
+        "encoding": {
+          "shape": { "field": "geometry", "type": "geojson" },
+          "color": {
+            "field": "avg_Evaporation",
+            "type": "quantitative",
+            "scale": { "scheme": "greens" },
+            "title": "Avg evaporation (mm)"
+          },
+          "tooltip": [
+            { "field": "properties.state", "title": "State" },
+            { "field": "SelectedYear", "title": "Year" },
+            { "field": "avg_Evaporation", "title": "Evaporation (mm)", "format": ".2f" },
+            { "field": "avg_Rainfall", "title": "Rainfall (mm)", "format": ".2f" },
+            { "field": "avg_MaxTemp", "title": "Max temp (°C)", "format": ".2f" }
+          ]
+        }
+      }
+    ]
+  }
+  
