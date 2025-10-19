@@ -1,0 +1,59 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "description": "Australia's share of global CO₂ emissions vs rest of world.",
+    "width": 380,
+    "height": 380,
+    "data": { "url": "CO2_Emmission.csv" },
+  
+    "params": [
+      {
+        "name": "yearSel",
+        "value": 2020,
+        "bind": { "input": "range", "min": 1950, "max": 2021, "step": 1, "name": "Year: " }
+      }
+    ],
+  
+    "transform": [
+      { "filter": "datum.country == 'Australia'" },
+      { "filter": "datum.year == yearSel" },
+  
+      { "calculate": "datum.share_global_co2", "as": "aus_share" },
+      { "calculate": "100 - datum.aus_share", "as": "rest_share" },
+  
+      { "fold": ["aus_share", "rest_share"], "as": ["segment", "value"] },
+      {
+        "calculate": "datum.segment == 'aus_share' ? 'Australia' : 'Rest of world'",
+        "as": "label"
+      }
+    ],
+  
+    "mark": { "type": "arc", "outerRadius": 180, "innerRadius": 70 },
+  
+    "encoding": {
+      "theta": { "field": "value", "type": "quantitative", "stack": true },
+      "color": {
+        "field": "label",
+        "type": "nominal",
+        "scale": { "range": ["#2ca02c", "#FFA500"] },
+        "title": null
+      },
+      "tooltip": [
+        { "field": "label", "type": "nominal", "title": "Segment" },
+        { "field": "value", "type": "quantitative", "title": "Share of global CO₂", "format": ".2f" },
+        { "field": "yearSel", "type": "quantitative", "title": "Year" }
+      ]
+    },
+  
+    "title": {
+      "text": "Australia's Share of Global CO₂ Emissions",
+      "subtitle": "Tiny slice globally… but see the per-person chart next",
+      "anchor": "start"
+    },
+  
+    "view": { "stroke": null },
+    "config": {
+      "legend": { "labelFontSize": 12 },
+      "title": { "fontSize": 18, "subtitleFontSize": 12 }
+    }
+  }
+  

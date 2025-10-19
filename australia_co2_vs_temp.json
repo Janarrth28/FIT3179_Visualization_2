@@ -1,0 +1,73 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Australia CO₂ emissions vs temperature change from CO₂. Scatter colored by year, with a linear regression line.",
+  "width": 860,
+  "height": 420,
+  "data": { "url": "CO2_Emmission.csv" },
+
+  "transform": [
+    { "filter": "datum.country == 'Australia'" },
+    { "filter": "isValid(datum.co2) && isValid(datum.temperature_change_from_co2)" }
+  ],
+
+  "layer": [
+    {
+      "mark": { "type": "point", "filled": true, "opacity": 0.9 },
+      "encoding": {
+        "x": {
+          "field": "co2",
+          "type": "quantitative",
+          "title": "Australia CO\u2082 emissions (Mt)",
+          "axis": { "format": "~s" }
+        },
+        "y": {
+          "field": "temperature_change_from_co2",
+          "type": "quantitative",
+          "title": "Temperature change from CO\u2082 (°C)"
+        },
+        "color": {
+          "field": "year",
+          "type": "quantitative",
+          "title": "Year",
+          "scale": { "domain": [1850, 2023], "range": ["#00cc00", "#ffff00", "#ff0000"] }
+        },
+        "tooltip": [
+          { "field": "year", "type": "quantitative" },
+          { "field": "co2", "type": "quantitative", "title": "CO\u2082 (Mt)", "format": ",.0f" },
+          {
+            "field": "temperature_change_from_co2",
+            "type": "quantitative",
+            "title": "Temp change (°C)",
+            "format": ".3f"
+          }
+        ],
+        "size": { "value": 55 }
+      }
+    },
+    {
+      "transform": [
+        {
+          "regression": "temperature_change_from_co2",
+          "on": "co2",
+          "as": ["co2_fit", "temp_fit"]
+        }
+      ],
+      "mark": { "type": "line", "strokeDash": [6, 4], "strokeWidth": 2, "color": "#333" },
+      "encoding": {
+        "x": { "field": "co2_fit", "type": "quantitative" },
+        "y": { "field": "temp_fit", "type": "quantitative" }
+      }
+    }
+  ],
+
+  "title": {
+    "text": "Australia: CO\u2082 Emissions vs Temperature Change",
+    "subtitle": "Color gradient shows time progression (green → yellow → red). Dashed line = linear trend.",
+    "anchor": "start"
+  },
+
+  "config": {
+    "axis": { "labelFontSize": 12, "titleFontSize": 13 },
+    "legend": { "titleFontSize": 12, "labelFontSize": 12 }
+  }
+}

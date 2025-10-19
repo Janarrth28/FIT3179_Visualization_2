@@ -1,0 +1,66 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "description": "CO₂ emissions per person for major countries over time.",
+    "width": 800,
+    "height": 450,
+  
+    "data": {
+      "url": "CO2_Emmission.csv"
+    },
+  
+    "transform": [
+      {
+        "filter": "datum.country == 'United States' || datum.country == 'United Kingdom' || datum.country == 'China' || datum.country == 'India' || datum.country == 'Australia'"
+      },
+      {
+        "filter": "datum.year >= 1950"
+      }
+    ],
+  
+    "mark": {
+      "type": "line",
+      "strokeWidth": 3,
+      "point": {"filled": true, "size": 30}
+    },
+  
+    "encoding": {
+      "x": {
+        "field": "year",
+        "type": "temporal",
+        "title": "Year"
+      },
+      "y": {
+        "field": "co2_per_capita",
+        "type": "quantitative",
+        "title": "CO₂ emissions per person (tonnes/person)"
+      },
+      "color": {
+        "field": "country",
+        "type": "nominal",
+        "title": "Country",
+        "scale": {
+          "domain": ["United States", "United Kingdom", "China", "India", "Australia"],
+          "range": ["#1f77b4", "#9467bd", "#d62728", "#ff7f0e", "#2ca02c"]
+        }
+      },
+      "tooltip": [
+        {"field": "country", "title": "Country"},
+        {"field": "year", "type": "temporal", "title": "Year"},
+        {"field": "co2_per_capita", "type": "quantitative", "title": "CO₂ per person (t)", "format": ".2f"}
+      ]
+    },
+  
+    "title": {
+      "text": "CO₂ Emissions Per Person (1950–Present)",
+      "subtitle": "Comparing UK, USA, China, India, and Australia",
+      "anchor": "start",
+      "fontSize": 20,
+      "subtitleFontSize": 12
+    },
+  
+    "config": {
+      "axis": {"labelFontSize": 12, "titleFontSize": 13},
+      "legend": {"labelFontSize": 12, "titleFontSize": 13}
+    }
+  }
+  

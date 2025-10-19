@@ -3,69 +3,133 @@
 <head>
   <meta charset="UTF-8" />
   <title>Australian Climate Change and Its Effects</title>
+
+  <!-- Vega libraries -->
   <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+
   <style>
-    body {
-      font-family: Arial, sans-serif;
+    :root{
+      --ink:#2b4d7a;
+      --text:#333;
+      --muted:#6b7280;
+      --bg:#f9f9f9;
+    }
+    *{box-sizing:border-box}
+    body{
+      font-family: Arial, Helvetica, sans-serif;
       margin: 40px;
-      background-color: #f9f9f9;
+      background: var(--bg);
+      color: var(--text);
     }
-    h1 {
-      color: #2b4d7a;
+    h1{
+      color: var(--ink);
+      margin-top:0;
+      font-size: 32px;
+      line-height: 1.2;
     }
-    .container {
-      display: flex;
-      gap: 40px;
-    }
-    .text-section {
-      flex: 1;
-      max-width: 350px;
+    .lead{
+      max-width: 900px;
       line-height: 1.6;
-      font-size: 15px;
-      color: #333;
+      font-size: 16px;
+      margin-bottom: 28px;
     }
-    .viz-section {
-      flex: 3;
+
+    /* Generic two-column section */
+    .section{
+      display:flex;
+      gap:40px;
+      align-items:flex-start;
+      margin: 42px 0;
+    }
+    .section.reverse{ /* text on the left, viz on the right */
+      flex-direction: row-reverse;
+    }
+    .text{
+      flex:1;
+      max-width: 360px;
+      line-height:1.6;
+      font-size:15px;
+    }
+    .viz{
+      flex:3;
+      min-width:0;
+      background:#fff;
+      border-radius:12px;
+      box-shadow: 0 2px 14px rgba(0,0,0,.06);
+      padding: 10px 8px;
+    }
+    .caption{
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+    /* Make it stack on small screens */
+    @media (max-width: 900px){
+      .section, .section.reverse{flex-direction:column;}
+      .text{max-width:none}
     }
   </style>
 </head>
 <body>
   <h1>Australian Climate Change and Its Effects</h1>
 
-  <div class="container">
-    <div class="text-section">
-      <p>
-        This visualisation explores how Australia’s changing climate relates to increasing bushfire activity.
-        The map displays <strong>average rainfall and temperature patterns</strong> across Australian states,
-        while accompanying charts show <strong>bushfire trends</strong>, <strong>forest burn ratios</strong>,
-        and the <strong>link between temperature and total area burnt</strong>.
-      </p>
-      <p>
-        The data reveal a clear pattern — as <strong>temperatures rise and rainfall declines</strong>, states such
-        as <strong>New South Wales</strong> and <strong>Victoria</strong> experience significantly higher burn areas,
-        highlighting the compounding effects of <strong>climate change on forest ecosystems</strong>.
-      </p>
-      <p>
-        Together, these visualisations emphasise the urgent need for climate resilience strategies to manage
-        <strong>heat, drought, and fire</strong> risks in Australia’s future.
-      </p>
-    </div>
+  <p class="lead">
+    This page explores how Australia’s changing climate relates to increasing bushfire activity.
+    The map presents <strong>rainfall / temperature / evaporation</strong> patterns by state,
+    followed by bushfire <strong>trends over time</strong>, the
+    <strong>native vs plantation burn ratio</strong>, and a
+    <strong>temperature–burnt-area relationship</strong>.
+  </p>
 
-    <div class="viz-section">
-      <div id="map-rte"></div>
-      <div id="fire-trend"></div>
-      <div id="burnRatioScatter"></div>
-      <div id="scatter-temp-burn"></div>
+  <!-- Map (kept simple; no side text) -->
+  <div class="section">
+    <div class="viz" id="map-rte"></div>
+    <div class="text">
+      <h3>Climate Baseline Map</h3>
+      <p>
+        Use the dropdown and year slider to view statewide averages for
+        <strong>rainfall</strong>, <strong>maximum temperature</strong>, or <strong>evaporation</strong>.
+        This provides the climate context that influences fuel dryness and fire behaviour.
+      </p>
+      <p class="caption">Source: BOM climate summaries (processed) &amp; state boundaries.</p>
     </div>
   </div>
 
+  
+
+
+  <div id="co2-percapita"></div>
+
+  <div id="co2-au-share"></div>
+
+
+  <div id="co2-sector-stack"></div>
+
+  <div id="australia-co2-temp"></div>
+  
+  
+
+  <div id="gdp-vs-efficiency"></div>
+
+  
+
+
+  <!-- Embed all specs -->
   <script>
     vegaEmbed("#map-rte", "map.json", { actions: false });
-    vegaEmbed("#fire-trend", "bushfire_trend_area.json", { actions: false });
-    vegaEmbed("#burnRatioScatter", "burn_ratio_scatter.json", { actions: false });
-    vegaEmbed("#scatter-temp-burn", "scatter_temp_vs_burn.json", { actions: false });
+    vegaEmbed("#co2-percapita", "co2_per_capita_multiline.json", { actions: false });
+    vegaEmbed("#co2-au-share", "co2_au_share_pie.json", {actions:false});
+    vegaEmbed("#co2-sector-stack", "co2_sector_stack.json", {actions:false});
+    vegaEmbed("#australia-co2-temp", "australia_co2_vs_temp.json", { actions: false });
+    vegaEmbed("#gdp-vs-efficiency", "gdp_vs_emission_efficiency_bubble.json", { actions: false });
+
+
+
+
+
+
   </script>
 </body>
 </html>

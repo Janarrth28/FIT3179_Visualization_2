@@ -1,0 +1,126 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "description": "CO2 by sector, absolute vs percent with independent y scales.",
+    "width": 880,
+    "height": 420,
+    "data": { "url": "CO2_Emmission.csv" },
+  
+    "params": [
+      {
+        "name": "countrySel",
+        "value": "Australia",
+        "bind": {
+          "input": "select",
+          "options": ["Australia","United States","United Kingdom","China","India"],
+          "name": "Country: "
+        }
+      },
+      {
+        "name": "yearMin",
+        "value": 1983,
+        "bind": { "input": "range", "min": 1983, "max": 2022, "step": 1, "name": "Start year: " }
+      },
+      {
+        "name": "modeSel",
+        "value": "stack",
+        "bind": { "input": "select", "options": ["stack","normalize"], "name": "Mode: " }
+      }
+    ],
+  
+    "transform": [
+      { "calculate": "year(datum.year)", "as": "yearNum" },
+      { "filter": "datum.country == countrySel" },
+      { "filter": "isValid(datum.yearNum) && datum.yearNum >= yearMin" },
+  
+      {
+        "fold": ["coal_co2", "oil_co2", "gas_co2", "cement_co2", "flaring_co2"],
+        "as": ["sectorRaw", "valueRaw"]
+      },
+  
+      { "calculate": "datum.valueRaw", "as": "value" },
+  
+      { "filter": "isValid(datum.value)" },
+  
+      { "calculate": "replace(replace(datum.sectorRaw, '_co2',''), '_',' ')", "as": "Sector" }
+    ],
+  
+    "layer": [
+      {
+        "name": "absolute",
+        "mark": { "type": "area", "interpolate": "monotone" },
+        "encoding": {
+          "x": { "field": "yearNum", "type": "quantitative", "title": "Year" },
+          "y": {
+            "aggregate": "sum",
+            "field": "value",
+            "type": "quantitative",
+            "title": "CO\u2082 emissions (Mt)",
+            "stack": "zero",
+            "axis": { "format": "~s" }
+          },
+          "color": {
+            "field": "Sector", "type": "nominal", "title": "Sector",
+            "scale": {
+              "domain": ["coal","oil","gas","cement","flaring"],
+              "range": ["#4e79a7","#f28e2b","#e15759","#76b7b2","#59a14f"]
+            }
+          },
+          "opacity": { "condition": { "test": "modeSel == 'stack'", "value": 1 }, "value": 0 },
+          "order": {
+            "field": "Sector",
+            "type": "nominal"
+          },
+          "tooltip": [
+            { "field": "yearNum", "type": "quantitative", "title": "Year" },
+            { "field": "Sector", "type": "nominal" },
+            { "aggregate": "sum", "field": "value", "type": "quantitative", "title": "CO\u2082 (Mt)", "format": ".2f" }
+          ]
+        }
+      },
+      {
+        "name": "normalized",
+        "mark": { "type": "area", "interpolate": "monotone" },
+        "encoding": {
+          "x": { "field": "yearNum", "type": "quantitative", "title": "Year" },
+          "y": {
+            "aggregate": "sum",
+            "field": "value",
+            "type": "quantitative",
+            "title": "Share of CO\u2082",
+            "stack": "normalize",
+            "axis": { "format": ".0%" }
+          },
+          "color": {
+            "field": "Sector", "type": "nominal", "title": "Sector",
+            "scale": {
+              "domain": ["coal","oil","gas","cement","flaring"],
+              "range": ["#4e79a7","#f28e2b","#e15759","#76b7b2","#59a14f"]
+            }
+          },
+          "opacity": { "condition": { "test": "modeSel == 'normalize'", "value": 1 }, "value": 0 },
+          "order": {
+            "field": "Sector",
+            "type": "nominal"
+          },
+          "tooltip": [
+            { "field": "yearNum", "type": "quantitative", "title": "Year" },
+            { "field": "Sector", "type": "nominal" },
+            { "aggregate": "sum", "field": "value", "type": "quantitative", "title": "Share", "format": ".1%" }
+          ]
+        }
+      }
+    ],
+  
+    "resolve": { "scale": { "y": "independent" } },
+  
+    "title": {
+      "text": "CO\u2082 by Sector Over Time",
+      "subtitle": "Select country and switch between absolute (stack) and percentage (normalize) views",
+      "anchor": "start"
+    },
+    "config": {
+      "axis": { "labelFontSize": 12, "titleFontSize": 13 },
+      "legend": { "labelFontSize": 12, "titleFontSize": 13 }
+    }
+  }
+  

@@ -1,0 +1,65 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "description": "Australia: GDP vs CO₂ per GDP over time (bubble chart).",
+    "width": 850,
+    "height": 500,
+    "data": { "url": "CO2_Emmission.csv" },
+  
+    "params": [
+      {
+        "name": "year_select",
+        "value": 2000,
+        "bind": { "input": "range", "min": 1960, "max": 2023, "step": 1, "name": "Select year:" }
+      }
+    ],
+  
+    "transform": [
+      { "filter": "datum.country == 'Australia'" },
+      { "calculate": "toNumber(datum.gdp)", "as": "GDP" },
+      { "calculate": "toNumber(datum.co2_per_gdp)", "as": "CO2GDP" },
+      { "calculate": "toNumber(datum.population)", "as": "POP" },
+      { "filter": "isFinite(datum.GDP) && datum.GDP > 0 && isFinite(datum.CO2GDP) && datum.CO2GDP > 0 && isFinite(datum.POP) && datum.POP > 0" },
+      { "calculate": "datum.GDP / 1e9", "as": "GDP_billions" },
+      { "calculate": "datum.POP / 1e6", "as": "POP_millions" }
+    ],
+  
+    "mark": { "type": "circle", "opacity": 0.8, "color": "#1f77b4" },
+  
+    "encoding": {
+      "x": {
+        "field": "GDP_billions",
+        "type": "quantitative",
+        "title": "GDP (USD, billions)",
+        "axis": { "format": "~s" }
+      },
+      "y": {
+        "field": "CO2GDP",
+        "type": "quantitative",
+        "title": "CO\u2082 per GDP (tonnes per USD)"
+      },
+      "size": {
+        "field": "POP_millions",
+        "type": "quantitative",
+        "title": "Population (millions)",
+        "scale": { "range": [100, 1500] }
+      },
+      "tooltip": [
+        { "field": "year", "type": "quantitative" },
+        { "field": "GDP_billions", "type": "quantitative", "format": ",.1f", "title": "GDP (bn USD)" },
+        { "field": "CO2GDP", "type": "quantitative", "format": ".3e", "title": "CO\u2082 / GDP" },
+        { "field": "POP_millions", "type": "quantitative", "format": ",.1f", "title": "Population (M)" }
+      ]
+    },
+  
+    "title": {
+      "text": "Australia: Economic Growth vs CO\u2082 Efficiency (1960–2023)",
+      "subtitle": "Bubble = population | X: GDP | Y: CO\u2082 per GDP",
+      "anchor": "start"
+    },
+  
+    "config": {
+      "axis": { "labelFontSize": 12, "titleFontSize": 13 },
+      "legend": { "labelFontSize": 12, "titleFontSize": 12 }
+    }
+  }
+  
