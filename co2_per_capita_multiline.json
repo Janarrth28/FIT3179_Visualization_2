@@ -13,7 +13,7 @@
         "filter": "datum.country == 'United States' || datum.country == 'United Kingdom' || datum.country == 'China' || datum.country == 'India' || datum.country == 'Australia'"
       },
       {
-        "filter": "datum.year >= 1950"
+        "filter": "datum.year >= 1985"
       }
     ],
   
@@ -51,7 +51,7 @@
     },
   
     "title": {
-      "text": "CO₂ Emissions Per Person (1950–Present)",
+      "text": "CO₂ Emissions Per Person (1985–Present)",
       "subtitle": "Comparing UK, USA, China, India, and Australia",
       "anchor": "start",
       "fontSize": 20,

@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Australian Climate Change and Its Effects</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Australia's Climate & Carbon Story</title>
 
   <!-- Vega libraries -->
   <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
@@ -10,126 +11,646 @@
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
 
   <style>
-    :root{
-      --ink:#2b4d7a;
-      --text:#333;
-      --muted:#6b7280;
-      --bg:#f9f9f9;
-    }
-    *{box-sizing:border-box}
-    body{
-      font-family: Arial, Helvetica, sans-serif;
-      margin: 40px;
-      background: var(--bg);
-      color: var(--text);
-    }
-    h1{
-      color: var(--ink);
-      margin-top:0;
-      font-size: 32px;
-      line-height: 1.2;
-    }
-    .lead{
-      max-width: 900px;
-      line-height: 1.6;
-      font-size: 16px;
-      margin-bottom: 28px;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    /* Generic two-column section */
-    .section{
-      display:flex;
-      gap:40px;
-      align-items:flex-start;
-      margin: 42px 0;
+    :root {
+      --ink: #0f172a;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --light-text: #9ca3af;
+      --bg: #f3f4f6;
+      --card: #ffffff;
+      --accent: #2563eb;
+      --accent-2: #16a34a;
+      --accent-3: #dc2626;
+      --accent-4: #ea580c;
+      --shadow: 0 8px 24px rgba(2, 8, 23, 0.08);
+      --shadow-lg: 0 20px 50px rgba(2, 8, 23, 0.12);
+      --radius: 16px;
     }
-    .section.reverse{ /* text on the left, viz on the right */
-      flex-direction: row-reverse;
+
+    html, body {
+      height: 100%;
+      width: 100%;
     }
-    .text{
-      flex:1;
-      max-width: 360px;
-      line-height:1.6;
-      font-size:15px;
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, var(--bg) 0%, #f0f9ff 100%);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
     }
-    .viz{
-      flex:3;
-      min-width:0;
-      background:#fff;
-      border-radius:12px;
-      box-shadow: 0 2px 14px rgba(0,0,0,.06);
-      padding: 10px 8px;
+
+    /* ===== HEADER ===== */
+    header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: #ffffff;
+      padding: 60px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
     }
-    .caption{
-      font-size: 12px;
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(37, 99, 235, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(22, 163, 74, 0.1) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    header > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    h1 {
+      font-size: clamp(32px, 4vw, 48px);
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #ffffff 0%, #e0e7ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .strap {
+      color: #cbd5e1;
+      font-size: 16px;
+      max-width: 700px;
+      margin: 0 auto;
+      font-weight: 400;
+    }
+
+    /* ===== MAIN CONTAINER ===== */
+    main {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px 32px;
+    }
+
+    /* ===== SECTIONS ===== */
+    section {
+      margin-bottom: 48px;
+    }
+
+    .section-header {
+      margin-bottom: 32px;
+    }
+
+    .section-header h2 {
+      font-size: 28px;
+      color: var(--ink);
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .section-header p {
       color: var(--muted);
-      margin-top: 8px;
+      font-size: 15px;
+      max-width: 600px;
     }
-    /* Make it stack on small screens */
-    @media (max-width: 900px){
-      .section, .section.reverse{flex-direction:column;}
-      .text{max-width:none}
+
+    /* ===== CARDS & LAYOUTS ===== */
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 24px;
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+
+    .viz-container {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 450px;
+    }
+
+    /* ===== GRID LAYOUTS ===== */
+    .grid-1 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1.6fr 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    .grid-2.reverse {
+      grid-template-columns: 1fr 1.6fr;
+    }
+
+    .grid-2-equal {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    /* ===== TEXT BOX ===== */
+    .info-box {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow);
+      border-left: 4px solid var(--accent);
+    }
+
+    .info-box h3 {
+      font-size: 20px;
+      color: var(--ink);
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+
+    .info-box p {
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.7;
+      margin-bottom: 12px;
+    }
+
+    .info-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .info-box.accent-2 {
+      border-left-color: var(--accent-2);
+    }
+
+    .info-box.accent-3 {
+      border-left-color: var(--accent-3);
+    }
+
+    .info-box.accent-4 {
+      border-left-color: var(--accent-4);
+    }
+
+    /* ===== FUNFACT ===== */
+    .fun-fact {
+      background: linear-gradient(135deg, #dbeafe 0%, #dcfce7 100%);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin: 24px 0;
+      border: 2px solid rgba(37, 99, 235, 0.2);
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .fun-fact-icon {
+      font-size: 28px;
+      flex-shrink: 0;
+    }
+
+    .fun-fact-text {
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.6;
+    }
+
+    /* ===== IMAGE PLACEHOLDER ===== */
+    .image-placeholder {
+      background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+      border-radius: var(--radius);
+      aspect-ratio: 16/9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 500;
+      text-align: center;
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .responsive-image {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  object-fit: cover;
+  display: block;
+}
+
+
+
+    /* ===== FORM CONTROLS ===== */
+    select, input[type="range"] {
+      font-family: inherit;
+    }
+
+    select {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background: var(--card);
+      border: 1.5px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 14px;
+      color: var(--ink);
+      box-shadow: 0 2px 6px rgba(2, 8, 23, 0.06);
+      cursor: pointer;
+      transition: 0.15s;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%231f2937' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      padding-right: 32px;
+    }
+
+    select:hover {
+      border-color: #cbd5e1;
+      box-shadow: 0 4px 10px rgba(2, 8, 23, 0.1);
+    }
+
+    select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      max-width: 280px;
+      height: 8px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%);
+      outline: none;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: white;
+      border: 2px solid var(--accent);
+      box-shadow: var(--shadow);
+      cursor: grab;
+      transition: 0.2s;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:active {
+      cursor: grabbing;
+      transform: scale(1.1);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: white;
+      border: 2px solid var(--accent);
+      box-shadow: var(--shadow);
+      cursor: grab;
+      transition: 0.2s;
+    }
+
+    input[type="range"]::-moz-range-thumb:active {
+      cursor: grabbing;
+      transform: scale(1.1);
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      background: #1f2937;
+      color: #e5e7eb;
+      text-align: center;
+      padding: 40px 32px;
+      margin-top: 60px;
+      font-size: 14px;
+    }
+
+    footer p {
+      margin: 0;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1024px) {
+      .grid-2, .grid-2.reverse {
+        grid-template-columns: 1fr;
+      }
+
+      .grid-2-equal {
+        grid-template-columns: 1fr;
+      }
+
+      .viz-container {
+        min-height: 400px;
+      }
+
+      main {
+        padding: 24px 20px;
+      }
+
+      header {
+        padding: 40px 24px;
+      }
+
+      h1 {
+        font-size: 32px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      main {
+        padding: 20px 16px;
+      }
+
+      header {
+        padding: 32px 16px;
+      }
+
+      .info-box {
+        padding: 20px;
+      }
+
+      .fun-fact {
+        padding: 16px;
+      }
+
+      .section-header h2 {
+        font-size: 22px;
+      }
+
+      input[type="range"] {
+        max-width: 100%;
+      }
+    }
+
+    /* ===== HIGHLIGHT TEXT ===== */
+    strong {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    em {
+      color: var(--accent-3);
+      font-style: italic;
+      font-weight: 500;
+    }
+
+    .highlight {
+      background: rgba(37, 99, 235, 0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--accent);
+      font-weight: 600;
     }
   </style>
 </head>
 <body>
-  <h1>Australian Climate Change and Its Effects</h1>
 
-  <p class="lead">
-    This page explores how Australia’s changing climate relates to increasing bushfire activity.
-    The map presents <strong>rainfall / temperature / evaporation</strong> patterns by state,
-    followed by bushfire <strong>trends over time</strong>, the
-    <strong>native vs plantation burn ratio</strong>, and a
-    <strong>temperature–burnt-area relationship</strong>.
-  </p>
+  <header>
+    <h1>🌍 Australia's Climate & Carbon Story</h1>
+    <p class="strap">Explore the intersection of climate patterns, emissions, and economic growth. From changing rainfall and rising temperatures to fossil fuel dependence—all in one visual journey.</p>
+  </header>
 
-  <!-- Map (kept simple; no side text) -->
-  <div class="section">
-    <div class="viz" id="map-rte"></div>
-    <div class="text">
-      <h3>Climate Baseline Map</h3>
-      <p>
-        Use the dropdown and year slider to view statewide averages for
-        <strong>rainfall</strong>, <strong>maximum temperature</strong>, or <strong>evaporation</strong>.
-        This provides the climate context that influences fuel dryness and fire behaviour.
-      </p>
-      <p class="caption">Source: BOM climate summaries (processed) &amp; state boundaries.</p>
-    </div>
-  </div>
+  <main>
 
-  
+    <!-- ===== SECTION 1: STATE CLIMATE BASELINE ===== -->
+    <section>
+      <div class="section-header">
+        <h2>📍 Climate Baseline by State</h2>
+        <p>Understand Australia's regional climate patterns. Rainfall, temperature, and evaporation set the stage for fire risk and drought severity.</p>
+      </div>
 
+      <div class="grid-2">
+        <div class="viz-container" id="map-rte"></div>
+        
+        <div>
+          <div class="info-box">
+            <h3>How to explore</h3>
+            <p>Use the <strong>dropdown</strong> to switch between rainfall, maximum temperature, and evaporation. Move the <strong>year slider</strong> to see how conditions change over time.</p>
+            <p>Lower rainfall + higher temperatures = increased fire risk and drought stress.</p>
+          </div>
 
-  <div id="co2-percapita"></div>
+          <div class="fun-fact">
+            <span class="fun-fact-icon">🔥</span>
+            <div class="fun-fact-text">
+              <strong>Fun Fact:</strong> Australia's average evaporation exceeds rainfall in most inland regions, making water scarcity a persistent challenge for agriculture and ecosystems.
+            </div>
+          </div>
 
-  <div id="co2-au-share"></div>
+          <div class="image-placeholder">
+            <img src="globe.jpeg"  class="responsive-image" style="margin-top: 20px;">
+          </div>
+        </div>
+      </div>
+    </section>
 
+    <!-- ===== SECTION 2: GLOBAL SHARE vs PER-CAPITA ===== -->
+    <section>
+      <div class="section-header">
+        <h2>🌐 Australia's Carbon Footprint: Global vs Per-Person</h2>
+        <p>While Australia's global share seems modest, our per-capita emissions tell a different story.</p>
+      </div>
 
-  <div id="co2-sector-stack"></div>
+      <div class="grid-2-equal">
+        <div class="viz-container" id="co2-au-share"></div>
+        <div class="viz-container" id="co2-percapita"></div>
+      </div><br>
 
-  <div id="australia-co2-temp"></div>
-  
-  
+      <div class="grid-2">
+        <div class="info-box accent-2">
+          <h3>The Global Picture</h3>
+          <p>Australia accounts for roughly <span class="highlight">1-1.2%</span> of global CO₂ emissions. In isolation, this looks small. But context matters.</p>
+        </div>
 
-  <div id="gdp-vs-efficiency"></div>
+        <div class="info-box accent-4">
+          <h3>Per-Capita Reality</h3>
+          <p>On a per-person basis, Australians emit <strong>more CO₂ than citizens of the UK, China, or India</strong>—all nations with much larger populations or greater industrialization.</p>
+        </div>
+      </div>
 
-  
+      <div class="fun-fact">
+        <span class="fun-fact-icon">📊</span>
+        <div class="fun-fact-text">
+          <strong>Did You Know?</strong> Australia's per-capita emissions (~16 tonnes per person annually) are roughly double the global average (~8 tonnes per person).
+        </div>
+      </div>
+    </section>
 
+    <!-- ===== SECTION 3: SECTOR BREAKDOWN ===== -->
+    <section>
+      <div class="section-header">
+        <h2>⚙️ What Drives Australia's Emissions?</h2>
+        <p>Coal, oil, gas, cement, and flaring each contribute differently to our carbon output.</p>
+      </div>
+
+      <div class="grid-2 reverse">
+        <div>
+          <div class="info-box accent-3">
+            <h3>Sector Breakdown</h3>
+            <p>The stacked area chart reveals Australia's <strong>coal dominance</strong>. Coal has historically been the backbone of Australian energy production, though natural gas is growing.</p>
+            <p>Toggle between <em>absolute</em> (tonnes) and <em>normalized</em> (percentage) views to see both the scale and the mix.</p>
+          </div>
+
+          <div class="fun-fact">
+            <span class="fun-fact-icon">💨</span>
+            <div class="fun-fact-text">
+              <strong>Coal's Grip:</strong> Coal still accounts for roughly 50–60% of Australia's energy-related CO₂ emissions, despite the growth of renewable energy in recent years.
+            </div>
+          </div>
+
+          <div class="image-placeholder" style="margin-top: 20px;">
+            <img src="coal.jpg" alt="Coal mine or coal-fired power plant" class="responsive-image" style="margin-top: 20px;">
+          </div>
+        </div>
+
+        <div class="viz-container" id="co2-sector-stack"></div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 4: ECONOMIC GROWTH & EFFICIENCY ===== -->
+    <section>
+      <div class="section-header">
+        <h2>💰 Economic Growth vs Emission Efficiency</h2>
+        <p>Has Australia decoupled GDP growth from carbon emissions?</p>
+      </div>
+
+      <div class="viz-container" id="gdp-vs-efficiency"></div><br><br>
+
+      <div class="grid-2">
+        <div class="info-box">
+          <h3>What the bubble chart shows</h3>
+          <p><strong>X-axis:</strong> GDP in billions USD (economic size)</p>
+          <p><strong>Y-axis:</strong> CO₂ per GDP (emission intensity)</p>
+          <p><strong>Bubble size:</strong> Population in millions</p>
+        </div>
+
+        <div class="info-box accent-2">
+          <h3>The Story</h3>
+          <p>Ideally, we'd see bubbles move <em>right and down</em> over time: GDP growing while emission intensity shrinks. Watch for the trend.</p>
+        </div>
+      </div>
+
+      <div class="fun-fact">
+        <span class="fun-fact-icon">⬆️</span>
+        <div class="fun-fact-text">
+          <strong>Partial Decoupling:</strong> Australia has improved efficiency (fewer tonnes of CO₂ per dollar of GDP), but absolute emissions haven't fallen proportionally to economic growth.
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 5: CO2 vs TEMPERATURE ===== -->
+    <section>
+      <div class="section-header">
+        <h2>🌡️ Australia's Emissions vs Temperature Impact</h2>
+        <p>The direct relationship between our CO₂ output and the warming we experience.</p>
+      </div>
+
+      <div class="viz-container" id="australia-co2-temp"></div><br><br>
+
+      <div class="grid-2">
+        <div class="info-box accent-3">
+          <h3>Reading the Chart</h3>
+          <p>Each dot is a year, colored by time (green = 1850s, red = 2020s). The dashed line shows the linear trend: more emissions, more warming.</p>
+        </div>
+
+        <div class="info-box">
+          <h3>The Connection</h3>
+          <p>The positive correlation underscores a hard truth: <strong>Australia's rising CO₂ emissions are driving measurable temperature increases</strong>, with cascading effects on drought, fires, and ecosystems.</p>
+        </div>
+      </div>
+
+      <div class="fun-fact">
+        <span class="fun-fact-icon">🔴</span>
+        <div class="fun-fact-text">
+          <strong>Warming Reality:</strong> Australia has warmed by approximately 1.4°C since 1910—faster than the global average—largely due to cumulative greenhouse gas emissions.
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 6: KEY TAKEAWAYS ===== -->
+    <section>
+      <div class="section-header">
+        <h2>🎯 Key Takeaways</h2>
+        <p>What the data tells us about Australia's climate and carbon journey.</p>
+      </div>
+
+      <div class="grid-2-equal">
+        <div class="info-box">
+          <h3>1. Regional Climate Shifts</h3>
+          <p>Rainfall patterns are becoming more erratic; temperatures are rising. Dry years are more common, intensifying fire seasons and water stress.</p>
+        </div>
+
+        <div class="info-box">
+          <h3>2. High Per-Capita Emissions</h3>
+          <p>Australia ranks among the highest in per-person CO₂ output, driven by fossil fuel dependence and energy-intensive industries.</p>
+        </div>
+
+        <div class="info-box">
+          <h3>3. Coal's Dominance</h3>
+          <p>Despite renewable energy growth, coal remains the largest single source of Australia's emissions, though gas is rising.</p>
+        </div>
+
+        <div class="info-box">
+          <h3>4. Partial Decoupling</h3>
+          <p>Australia has improved emission intensity, but absolute emissions haven't declined sharply—economic growth and carbon are still intertwined.</p>
+        </div>
+
+        <div class="info-box">
+          <h3>5. Temperature Impact</h3>
+          <p>Our emissions drive local warming, which amplifies fire risk, drought severity, and ecosystem stress.</p>
+        </div>
+
+        <div class="info-box">
+          <h3>6. The Path Forward</h3>
+          <p>Transitioning to renewables, improving efficiency, and managing land use are essential to break the emissions-warming cycle.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>🌱 Data-driven insights for a sustainable future. Visualizations powered by Vega-Lite.</p>
+    <p style="margin-top: 12px; opacity: 0.8;">© 2024 | Australia's Climate & Carbon Story</p>
+  </footer>
 
   <!-- Embed all specs -->
   <script>
-    vegaEmbed("#map-rte", "map.json", { actions: false });
-    vegaEmbed("#co2-percapita", "co2_per_capita_multiline.json", { actions: false });
-    vegaEmbed("#co2-au-share", "co2_au_share_pie.json", {actions:false});
-    vegaEmbed("#co2-sector-stack", "co2_sector_stack.json", {actions:false});
-    vegaEmbed("#australia-co2-temp", "australia_co2_vs_temp.json", { actions: false });
-    vegaEmbed("#gdp-vs-efficiency", "gdp_vs_emission_efficiency_bubble.json", { actions: false });
-
-
-
-
-
-
+    vegaEmbed("#map-rte", "map.json", { actions: false }).catch(console.error);
+    vegaEmbed("#co2-au-share", "co2_au_share_pie.json", { actions: false }).catch(console.error);
+    vegaEmbed("#co2-percapita", "co2_per_capita_multiline.json", { actions: false }).catch(console.error);
+    vegaEmbed("#co2-sector-stack", "co2_sector_stack.json", { actions: false }).catch(console.error);
+    vegaEmbed("#gdp-vs-efficiency", "gdp_vs_emission_efficiency_bubble.json", { actions: false }).catch(console.error);
+    vegaEmbed("#australia-co2-temp", "australia_co2_vs_temp.json", { actions: false }).catch(console.error);
   </script>
+
 </body>
 </html>
