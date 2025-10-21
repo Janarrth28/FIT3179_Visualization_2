@@ -168,7 +168,7 @@
 
     .grid-2-equal {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 0.8fr 1.2fr;
       gap: 32px;
     }
 
@@ -479,22 +479,27 @@
         <p>While Australia's global share seems modest, our per-capita emissions tell a different story.</p>
       </div>
 
-      <div class="grid-2-equal">
-        <div class="viz-container" id="co2-au-share"></div>
-        <div class="viz-container" id="co2-percapita"></div>
-      </div><br>
+      
+
+      
 
       <div class="grid-2">
-        <div class="info-box accent-2">
-          <h3>The Global Picture</h3>
-          <p>Australia accounts for roughly <span class="highlight">1-1.2%</span> of global CO₂ emissions. In isolation, this looks small. But context matters.</p>
+        <div class="viz-container" id="co2-au-share"></div>
+        
+        <div>
+          <div class="info-box accent-2">
+            <h3>The Global Picture</h3>
+            <p>Australia accounts for roughly <span class="highlight">1-1.2%</span> of global CO₂ emissions. In isolation, this looks small. But context matters.</p>
+          </div><br>
+      
+          <div class="info-box accent-4" style="margin-top: 24px;">
+            <h3>Per-Capita Reality</h3>
+            <p>On a per-person basis, Australians emit <strong>more CO₂ than citizens of the UK, China, or India</strong>—all nations with much larger populations or greater industrialization.</p>
+          </div>
         </div>
+      </div><br><br>
 
-        <div class="info-box accent-4">
-          <h3>Per-Capita Reality</h3>
-          <p>On a per-person basis, Australians emit <strong>more CO₂ than citizens of the UK, China, or India</strong>—all nations with much larger populations or greater industrialization.</p>
-        </div>
-      </div>
+      <div class="viz-container" id="co2-percapita"></div><br>
 
       <div class="fun-fact">
         <span class="fun-fact-icon">📊</span>
@@ -639,7 +644,7 @@
 
   <footer>
     <p>🌱 Data-driven insights for a sustainable future. Visualizations powered by Vega-Lite.</p>
-    <p style="margin-top: 12px; opacity: 0.8;">© 2024 | Australia's Climate & Carbon Story</p>
+    <p style="margin-top: 12px; opacity: 0.8;">© 2025 | Australia's Climate & Carbon Story</p>
   </footer>
 
   <!-- Embed all specs -->

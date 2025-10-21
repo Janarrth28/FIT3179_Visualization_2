@@ -27,22 +27,46 @@
       }
     ],
   
-    "mark": { "type": "arc", "outerRadius": 180, "innerRadius": 70 },
-  
-    "encoding": {
-      "theta": { "field": "value", "type": "quantitative", "stack": true },
-      "color": {
-        "field": "label",
-        "type": "nominal",
-        "scale": { "range": ["#2ca02c", "#FFA500"] },
-        "title": null
+    "layer": [
+      {
+        "mark": { "type": "arc", "outerRadius": 180, "innerRadius": 70 },
+        "encoding": {
+          "theta": { "field": "value", "type": "quantitative", "stack": true },
+          "color": {
+            "field": "label",
+            "type": "nominal",
+            "scale": { "range": ["#2ca02c", "#FFA500"] },
+            "title": null
+          },
+          "tooltip": [
+            { "field": "label", "type": "nominal", "title": "Segment" },
+            { "field": "value", "type": "quantitative", "title": "Share of global CO₂", "format": ".2f" },
+            { "field": "yearSel", "type": "quantitative", "title": "Year" }
+          ]
+        }
       },
-      "tooltip": [
-        { "field": "label", "type": "nominal", "title": "Segment" },
-        { "field": "value", "type": "quantitative", "title": "Share of global CO₂", "format": ".2f" },
-        { "field": "yearSel", "type": "quantitative", "title": "Year" }
-      ]
-    },
+      {
+        "data": {
+          "values": [
+            { "label": "Australia's slice" }
+          ]
+        },
+        "mark": {
+          "type": "text",
+          "align": "right",
+          "fontSize": 14,
+          "fontWeight": "bold",
+          "fill": "#16a34a",
+          "dx": -15,
+          "dy": -100,
+          "baseline": "top"
+        },
+        "encoding": {
+          "text": { "field": "label", "type": "nominal" }
+        }
+      }
+      
+    ],
   
     "title": {
       "text": "Australia's Share of Global CO₂ Emissions",
@@ -55,5 +79,4 @@
       "legend": { "labelFontSize": 12 },
       "title": { "fontSize": 18, "subtitleFontSize": 12 }
     }
-  }
-  
+}
